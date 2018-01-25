@@ -68,6 +68,6 @@ store.dispatch('filters/addProps', {
 store.dispatch('filters/removeProps', 'size');
 store.dispatch('filters/removeProps', ['size', 'coords']); 
 
-/* ОТЧИСТИТЬ (удаляет гет параметр и отчищает хранилище )*/ 
+/* ОЧИСТИТЬ (удаляет гет параметр и отчищает хранилище )*/ 
 store.dispatch('filters/clearProps');
 ```
