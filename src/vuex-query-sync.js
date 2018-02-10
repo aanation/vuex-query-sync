@@ -35,7 +35,7 @@ function pushQuery(state, router) {
 
 function extractPropsToStore(targetStoreModule, json, store) {
     let props = parseJSON(json);  
-    if (props === null) return next(new QuerySyncError(`get-parameter ${param} must be correct JSON`));
+    if (props === null) throw new QuerySyncError(`get-parameter ${param} must be correct JSON`);
     store.commit(`${targetStoreModule}/CLEAR`, props);
     store.commit(`${targetStoreModule}/SET_PROPS`, props);
 } 
