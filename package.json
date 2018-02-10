@@ -15,7 +15,10 @@
   ],
   "author": "42px",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "core-js": "^2.5.3",
+    "joi-browser": "^13.0.1"
+  },
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",

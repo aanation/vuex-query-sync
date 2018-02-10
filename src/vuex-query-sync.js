@@ -1,5 +1,9 @@
+require('core-js/fn/map'); 
+require('core-js/fn/promise'); 
+
+
 import Vue from 'vue'; 
-import Joi from 'joi'; 
+import Joi from 'joi-browser'; 
 import {QuerySyncError} from './errors';
 
 function validateOptions(options) {
