@@ -1,19 +1,25 @@
-require('core-js/fn/map'); 
-require('core-js/fn/promise'); 
-
-
 import Vue from 'vue'; 
-import Joi from 'joi-browser'; 
 import {QuerySyncError} from './errors';
 
 function validateOptions(options) {
-    let {error} = Joi.validate(options, Joi.object().keys({
-        sync: Joi.array().items(Joi.object().keys({
-            param: Joi.string().required(), 
-            targetStoreModule: Joi.string().required()
-        })).required()
-    })); 
-    if (error !== null) throw new QuerySyncError('incorrect options object!',err); 
+    if (typeof options !== "object" || !Array.isArray(options.sync) || !options.sync.length) {
+        throw new QuerySyncError('incorrect options object!');
+    }
+
+    options.sync.forEach(({param, targetStoreModule}) => {
+        if (typeof param !== "string" || typeof targetStoreModule !== "string") {
+            throw new QuerySyncError('incorrect options object!');
+        }
+    });
+}
+
+function isArrayOfString(test) {
+    if (!Array.isArray(test)) {
+        return false; 
+    } 
+    return test.every(v => {
+        return typeof v === "string"; 
+    });
 }
 
 function pushQuery(state, router) {
@@ -84,7 +90,7 @@ export default function(store, router, options) {
                 removeProps({state, commit}, props) {
                     if (typeof props === "string") {
                         commit('REMOVE', [props]);
-                    } else if (!Joi.validate(props, Joi.array().items(Joi.string())).error) {
+                    } else if (isArrayOfString(props)) {
                         commit('REMOVE', props); 
                     } else {
                         throw new QuerySyncError('arg2 must be array of strings!');
