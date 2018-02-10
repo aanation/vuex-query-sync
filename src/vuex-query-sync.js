@@ -119,12 +119,12 @@ export default function(store, router, options) {
 
         router.afterEach((to, from) => {
             if (to.query[param]) {
-                extractPropsToStore(to.query[param]);
+                extractPropsToStore(targetStoreModule,to.query[param], store);
             }
         }); 
 
         if (router.currentRoute.query[param]) {
-            extractPropsToStore(to.query[param]);
+            extractPropsToStore(targetStoreModule,to.query[param], store);
         }
     });
 
