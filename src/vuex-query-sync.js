@@ -117,11 +117,10 @@ export default function(store, router, options) {
             }
         });
 
-        router.beforeRouteUpdate((to, from, next) => {
+        router.afterEach((to, from) => {
             if (to.query[param]) {
                 extractPropsToStore(to.query[param]);
             }
-            next();
         }); 
 
         if (router.currentRoute.query[param]) {
