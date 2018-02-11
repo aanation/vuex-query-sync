@@ -1,5 +1,6 @@
 import Vue from 'vue'; 
-import {QuerySyncError} from './errors';
+import {QuerySyncError} from './errors'; 
+
 
 function validateOptions(options) {
     if (typeof options !== "object" || !Array.isArray(options.sync) || !options.sync.length) {
@@ -22,23 +23,6 @@ function isArrayOfString(test) {
     });
 }
 
-function pushQuery(state, router) {
-    let currQuery = Object.assign({}, router.currentRoute.query); 
-    let newParam = {};
-    newParam[param] = JSON.stringify(state); 
-    router.push({
-        query: Object.assign(currQuery, {
-            param: newParam
-        }) 
-    }); 
-}     
-
-function extractPropsToStore(targetStoreModule, json, store) {
-    let props = parseJSON(json);  
-    if (props === null) throw new QuerySyncError(`get-parameter ${param} must be correct JSON`);
-    store.commit(`${targetStoreModule}/CLEAR`, props);
-    store.commit(`${targetStoreModule}/SET_PROPS`, props);
-} 
 
 function parseJSON(s) {
     let obj;
@@ -66,12 +50,37 @@ export default function(store, router, options) {
     validateOptions(options); 
 
     options.sync.forEach(({param, targetStoreModule}) => {
+
+
+        let pushQuery = function(state, router) {
+            let currQuery = Object.assign({}, router.currentRoute.query); 
+            let newParam = {};
+            newParam[param] = JSON.stringify(state); 
+            router.push({
+                query: Object.assign(currQuery, newParam) 
+            }); 
+        }     
+        
+        let extractPropsToStore = function(targetStoreModule, json, store, next) {
+            let props = parseJSON(json);  
+            if (props === null) {
+                let err = new QuerySyncError(`get-parameter ${param} must be correct JSON`);
+                if (next) next(err);
+                if (!next) throw err; 
+            } 
+            store.commit(`${targetStoreModule}/CLEAR`, props);
+            store.commit(`${targetStoreModule}/SET_PROPS`, props);
+        } 
+
+
+
+
         if (store.state[targetStoreModule]) {
             return; 
         }
 
         store.registerModule(targetStoreModule, {
-            namespased: true, 
+            namespaced: true, 
             state: {},  
             actions: {
                 addProps({state, commit}, prop, val) {
@@ -117,10 +126,11 @@ export default function(store, router, options) {
             }
         });
 
-        router.afterEach((to, from) => {
+        router.beforeEach((to, from, next) => {
             if (to.query[param]) {
-                extractPropsToStore(targetStoreModule,to.query[param], store);
+                extractPropsToStore(targetStoreModule,to.query[param], store, next);
             }
+            next();
         }); 
 
         if (router.currentRoute.query[param]) {
