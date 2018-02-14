@@ -61,7 +61,7 @@ export default function(store, router, options) {
             }); 
         }     
 
-        let clearQuery = function(state, router) {
+        let clearQuery = function() {
             let currQuery = Object.assign({}, router.currentRoute.query);
             delete currQuery[param];
             router.push({

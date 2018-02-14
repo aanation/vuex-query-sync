@@ -1,6 +1,6 @@
 {
   "name": "vuex-query-sync",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "sync get-parameters and store",
   "main": "dist/bundle.js",
   "module": "dist/bundle.js",
