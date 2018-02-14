@@ -105,16 +105,21 @@ export default function(store, router, options) {
                         throw new QuerySyncError('arg2 must be array of strings!');
                     }
                     pushQuery(state, router);
-                }
+                }, 
+                clearProps({state, commit}) {
+                    commit('CLEAR');
+                } 
             }, 
             mutations: {
                 SET_PROPS(state, props) {
                     Object.keys(props).forEach(propName => {
+                        if (!props.hasOwnProperty(propName)) return; 
                         Vue.set(state, propName, props[propName]); 
                     });
                 }, 
                 CLEAR(state, props) {
                     Object.keys(state).forEach(propName => {
+                        if (!state.hasOwnProperty(propName)) return; 
                         Vue.delete(state, propName); 
                     }); 
                 },  
@@ -129,6 +134,8 @@ export default function(store, router, options) {
         router.beforeEach((to, from, next) => {
             if (to.query[param]) {
                 extractPropsToStore(targetStoreModule,to.query[param], store, next);
+            } else {
+                store.commit(`${targetStoreModule}/CLEAR`); 
             }
             next();
         }); 
