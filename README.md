@@ -63,6 +63,15 @@ store.dispatch('filters/addProps', {
     size: '30m'
 });
 
+/* ОБНОВЛЕНИЕ */
+//полностью аналогично добавлению с точки зрения аргументов, за тем исключением, что объект будет полностью заменен
+store.dispatch('filters/setQuery', {
+    coords: {
+        x: 3,
+        y: 5
+    }.
+    size: '30m'
+}); 
 
 /* УДАЛЕНИЕ */
 store.dispatch('filters/removeProps', 'size');

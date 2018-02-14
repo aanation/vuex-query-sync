@@ -59,7 +59,7 @@ export default function(store, router, options) {
             router.push({
                 query: Object.assign(currQuery, newParam) 
             }); 
-        }     
+        };
 
         let clearQuery = function() {
             let currQuery = Object.assign({}, router.currentRoute.query);
@@ -91,6 +91,10 @@ export default function(store, router, options) {
             namespaced: true, 
             state: {},  
             actions: {
+                setQuery({state, commit, dispatch}, prop, val) {
+                    commit('CLEAR'); 
+                    dispatch('addProps', prop, val);
+                }, 
                 addProps({state, commit}, prop, val) {
                     if (typeof prop === "object" && Object.keys(prop).length > 0) {
                         commit('SET_PROPS', prop);
