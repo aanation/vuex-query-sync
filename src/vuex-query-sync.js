@@ -60,6 +60,14 @@ export default function(store, router, options) {
                 query: Object.assign(currQuery, newParam) 
             }); 
         }     
+
+        let clearQuery = function(state, router) {
+            let currQuery = Object.assign({}, router.currentRoute.query);
+            delete currQuery[param];
+            router.push({
+                query: currQuery
+            });
+        };
         
         let extractPropsToStore = function(targetStoreModule, json, store, next) {
             let props = parseJSON(json);  
@@ -108,6 +116,7 @@ export default function(store, router, options) {
                 }, 
                 clearProps({state, commit}) {
                     commit('CLEAR');
+                    clearQuery(); 
                 } 
             }, 
             mutations: {
